@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Proposal: Connecting the Dots</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMVIhbGKLCePo23SDr2IWkaMasA2z024cuW+qctoKEgwFVUNh" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUbKyIyuh" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURPl3keyCpgkrZFeAfv4vs5gaepKOht1rUGAv4BcrZgqrLKCRJEUDu" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #374151;
+        }
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 6rem 1.5rem;
+            border-bottom: 1px solid #E5E7EB;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .katex-display {
+            font-size: 1.1em !important;
+            color: #111827;
+        }
+        .katex {
+             color: #111827;
+        }
+        .nav-link {
+            transition: color 0.3s, transform 0.3s;
+        }
+        .nav-link:hover {
+            color: #2563EB;
+            transform: translateY(-2px);
+        }
+        .card {
+            background-color: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+        }
+        .section.visible .card {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .dots-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        /* Animation for Gamma Curve Drawing */
+        .gamma-curve {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw-curve 2.5s ease-in-out forwards;
+        }
+        .section.visible .gamma-curve {
+             animation-delay: 1.2s;
+        }
+        @keyframes draw-curve {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        /* Animation for Diagram Points/Labels */
+        .diagram-label {
+            opacity: 0;
+        }
+        .section.visible .diagram-label {
+            animation: fade-in 0.5s ease forwards;
+        }
+        @keyframes fade-in {
+            to {
+                opacity: 1;
+            }
+        }
+        /* Animation delays for points */
+        .section.visible #point-a { animation-delay: 0.2s; }
+        .section.visible #point-b { animation-delay: 0.4s; }
+        .section.visible #point-c { animation-delay: 0.6s; }
+        .section.visible #point-d { animation-delay: 0.8s; }
+        .section.visible #curve-e { animation-delay: 1.2s; }
+
+
+        /* Master Identity Diagram Animations */
+        .diagram-flow, .diagram-op, .diagram-box, .diagram-step {
+            opacity: 0;
+        }
+        .section.visible .diagram-flow, 
+        .section.visible .diagram-op, 
+        .section.visible .diagram-box,
+        .section.visible .diagram-step {
+            animation: fade-in 0.7s ease-out forwards;
+        }
+        .section.visible .step-1 { animation-delay: 0.2s; }
+        .section.visible .step-2 { animation-delay: 0.8s; }
+        .section.visible .step-3 { animation-delay: 1.4s; }
+        .section.visible .step-4 { animation-delay: 2.0s; }
+        .section.visible .step-5 { animation-delay: 2.6s; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Sticky Navigation -->
+    <nav class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-blue-600">Research Vision</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#intro" class="nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Introduction</a>
+                        <a href="#functions" class="nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">The Functions</a>
+                        <a href="#applications" class="nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Applications</a>
+                        <a href="#vision" class="nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Research Vision</a>
+                        <a href="#conclusion" class="nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Conclusion</a>
+                        <a href="#citations" class="nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Citations</a>
+                    </div>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                        <span class="sr-only">Open main menu</span>
+                        <svg id="hamburger-icon" class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <svg id="close-icon" class="hidden h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#intro" class="block nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium">Introduction</a>
+                <a href="#functions" class="block nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium">The Functions</a>
+                <a href="#applications" class="block nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium">Applications</a>
+                <a href="#vision" class="block nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium">Research Vision</a>
+                <a href="#conclusion" class="block nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium">Conclusion</a>
+                <a href="#citations" class="block nav-link text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium">Citations</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="section relative overflow-hidden">
+        <div class="dots-bg" id="dots-container"></div>
+        <div class="text-center z-10">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight">
+                <span class="block text-gray-900">Connecting the Dots:</span>
+                <span class="block text-blue-600">How Euler's Timeless Functions Are Shaping the Future of Science and AI</span>
+            </h1>
+            <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">Wai Yan Tun Oo</p>
+            <p class="mt-2 text-md text-gray-500">June 2025</p>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section id="intro" class="section">
+        <div class="max-w-6xl w-full mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div class="text-center md:text-left">
+                <h2 class="text-3xl font-bold tracking-tight text-blue-600 sm:text-4xl">The Factorial's Dilemma</h2>
+                <p class="mt-6 text-lg leading-8 text-gray-600">The factorial, $n!$, is defined only for whole numbers, leaving us with a series of disconnected points (A, B, C, D). The dilemma is how to find a natural, continuous curve that connects them.</p>
+                <p class="mt-4 text-lg leading-8 text-gray-600">Euler's Gamma function provides the solution with the elegant curve (E), giving a meaningful value for non-integer factorials like $(2.5)!$ and bridging the gap between the discrete and the continuous.</p>
+            </div>
+            <div class="w-full max-w-lg mx-auto">
+                <!-- Perfected SVG Diagram for Factorial Interpolation -->
+                <svg viewBox="0 0 100 80" class="w-full h-auto">
+                    <!-- Axes -->
+                    <line x1="10" y1="70" x2="95" y2="70" stroke="#9CA3AF" stroke-width="0.5"/>
+                    <line x1="10" y1="5" x2="10" y2="70" stroke="#9CA3AF" stroke-width="0.5"/>
+                    <text x="95" y="75" font-size="4" fill="#6B7281">x</text>
+                    <text x="2" y="10" font-size="4" fill="#6B7281">x!</text>
+                    <!-- Ticks -->
+                    <g font-size="3" fill="#6B7281" text-anchor="middle">
+                        <text x="26" y="75">1</text><line x1="26" y1="70" x2="26" y2="72" stroke="#9CA3AF" stroke-width="0.5"/>
+                        <text x="42" y="75">2</text><line x1="42" y1="70" x2="42" y2="72" stroke="#9CA3AF" stroke-width="0.5"/>
+                        <text x="58" y="75">3</text><line x1="58" y1="70" x2="58" y2="72" stroke="#9CA3AF" stroke-width="0.5"/>
+                        <text x="74" y="75">4</text><line x1="74" y1="70" x2="74" y2="72" stroke="#9CA3AF" stroke-width="0.5"/>
+                    </g>
+                    <!-- Gamma(x+1) Curve -->
+                    <path class="gamma-curve" d="M17.4,67.8 C18.0,67.5 26.0,67.6 42.0,65.6 C52.0,64.2 55.0,59.6 58.0,55.6 C65.0,45.6 70.0,25.6 74.0,12.4" stroke="#2563EB" stroke-width="1.5" fill="none"/>
+                    <text id="curve-e" class="diagram-label" x="50" y="35" font-size="5" fill="#2563EB" font-weight="bold">E</text>
+                    <!-- Factorial Points (n, n!) -->
+                    <g id="point-a" class="diagram-label"><circle cx="26" cy="67.6" r="1.5" fill="#1D4ED8"/><text x="23" y="64" font-size="4" fill="#1D4ED8" font-weight="bold">A</text></g>
+                    <g id="point-b" class="diagram-label"><circle cx="42" cy="65.6" r="1.5" fill="#1D4ED8"/><text x="39" y="62" font-size="4" fill="#1D4ED8" font-weight="bold">B</text></g>
+                    <g id="point-c" class="diagram-label"><circle cx="58" cy="55.6" r="1.5" fill="#1D4ED8"/><text x="55" y="52" font-size="4" fill="#1D4ED8" font-weight="bold">C</text></g>
+                    <g id="point-d" class="diagram-label"><circle cx="74" cy="12.4" r="1.5" fill="#1D4ED8"/><text x="71" y="9" font-size="4" fill="#1D4ED8" font-weight="bold">D</text></g>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Functions Section -->
+    <section id="functions" class="section">
+        <div class="max-w-5xl mx-auto px-4">
+            <h2 class="text-3xl font-bold tracking-tight text-center text-blue-600 sm:text-4xl">Euler's Stroke of Genius</h2>
+             <p class="mt-4 max-w-3xl mx-auto text-center text-lg text-gray-600">Euler discovered two key functions to describe the continuous world, linked by a profound Master Identity.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Gamma Function Card -->
+                <div class="card p-8 rounded-xl">
+                    <h3 class="text-2xl font-bold text-gray-900">The Gamma Function: $\Gamma(z)$</h3>
+                    <p class="mt-4 text-gray-600">The continuous extension of the factorial. For an integer n, $\Gamma(n) = (n-1)!$.</p>
+                    <div class="mt-6 text-center p-4 bg-gray-100 rounded-lg"><span class="katex-formula">$$ \Gamma(z) = \int_{0}^{\infty} t^{z-1}e^{-t}dt $$</span></div>
+                </div>
+                <!-- Beta Function Card -->
+                <div class="card p-8 rounded-xl">
+                    <h3 class="text-2xl font-bold text-gray-900">The Beta Function: $B(x,y)$</h3>
+                    <p class="mt-4 text-gray-600">Essential for describing proportions, probabilities, and ratios bounded between 0 and 1.</p>
+                    <div class="mt-6 text-center p-4 bg-gray-100 rounded-lg"><span class="katex-formula">$$ B(x,y) = \int_{0}^{1} t^{x-1}(1-t)^{y-1}dt $$</span></div>
+                </div>
+            </div>
+            <!-- Master Identity with Diagram -->
+            <div class="mt-12 text-center card p-8 rounded-xl max-w-4xl mx-auto">
+                <h3 class="text-2xl font-bold text-gray-900">The Master Identity</h3>
+                <p class="mt-4 text-gray-600">The true power is unlocked by their relationship: the world of proportions (Beta) is built from continuous products (Gamma).</p>
+                <div class="mt-6 p-4 bg-gray-100 rounded-lg inline-block"><span class="katex-formula">$$ B(x,y) = \frac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)} $$</span></div>
+                 <!-- Perfected Master Identity SVG Diagram -->
+                <svg viewBox="0 0 200 120" class="w-full max-w-xl mx-auto mt-4">
+                    <!-- Step Numbers -->
+                    <text class="diagram-step step-1" x="5" y="19" font-size="6" font-weight="bold" fill="#2563EB">1</text>
+                    <text class="diagram-step step-1" x="5" y="49" font-size="6" font-weight="bold" fill="#2563EB">1</text>
+                    <text class="diagram-step step-2" x="90" y="33" font-size="6" font-weight="bold" fill="#2563EB">2</text>
+                    <text class="diagram-step step-3" x="5" y="99" font-size="6" font-weight="bold" fill="#2563EB">3</text>
+                    <text class="diagram-step step-4" x="125" y="68" font-size="6" font-weight="bold" fill="#2563EB">4</text>
+                    <text class="diagram-step step-5" x="195" y="69" font-size="6" font-weight="bold" fill="#2563EB">5</text>
+                    <!-- Boxes -->
+                    <g class="diagram-box step-1"><rect x="15" y="5" width="45" height="20" rx="3" fill="#DBEAFE"/><text x="37.5" y="19" font-size="8" text-anchor="middle" fill="#1E40AF">$\Gamma(x)$</text></g>
+                    <g class="diagram-box step-1"><rect x="15" y="35" width="45" height="20" rx="3" fill="#DBEAFE"/><text x="37.5" y="49" font-size="8" text-anchor="middle" fill="#1E40AF">$\Gamma(y)$</text></g>
+                    <g class="diagram-box step-3"><rect x="15" y="85" width="45" height="20" rx="3" fill="#DBEAFE"/><text x="37.5" y="99" font-size="8" text-anchor="middle" fill="#1E40AF">$\Gamma(x+y)$</text></g>
+                    <g class="diagram-box step-5"><rect x="145" y="55" width="45" height="20" rx="3" fill="#93C5FD"/><text x="167.5" y="69" font-size="8" text-anchor="middle" fill="#1D4ED8">$B(x,y)$</text></g>
+                    <!-- Operators -->
+                    <g class="diagram-op step-2"><circle cx="80" cy="30" r="8" fill="#BFDBFE"/><text x="80" y="33" font-size="8" text-anchor="middle" fill="#1E3A8A">×</text></g>
+                    <g class="diagram-op step-4"><circle cx="115" cy="65" r="8" fill="#BFDBFE"/><text x="115" y="68" font-size="8" text-anchor="middle" fill="#1E3A8A">÷</text></g>
+                    <!-- Flows -->
+                    <path class="diagram-flow step-1" d="M60 15 H 72" stroke="#93C5FD" stroke-width="1" fill="none"/>
+                    <path class="diagram-flow step-1" d="M60 45 H 72" stroke="#93C5FD" stroke-width="1" fill="none"/>
+                    <path class="diagram-flow step-2" d="M88 30 H 115 C 115 30 115 57 115 57" stroke="#93C5FD" stroke-width="1" fill="none"/>
+                    <path class="diagram-flow step-3" d="M60 95 H 115 C 115 95 115 73 115 73" stroke="#93C5FD" stroke-width="1" fill="none"/>
+                    <path class="diagram-flow step-4" d="M123 65 H 145" stroke="#60A5FA" stroke-width="1.5" fill="none"/>
+                </svg>
+                <div class="mt-4 text-left max-w-xl mx-auto text-sm text-gray-600 space-y-1">
+                    <p><strong class="text-blue-600">1.</strong> Start with two Gamma functions, $\Gamma(x)$ and $\Gamma(y)$.</p>
+                    <p><strong class="text-blue-600">2.</strong> Multiply them together.</p>
+                    <p><strong class="text-blue-600">3.</strong> Separately, calculate the Gamma function of their sum, $\Gamma(x+y)$.</p>
+                    <p><strong class="text-blue-600">4.</strong> Divide the product from step 2 by the result from step 3.</p>
+                    <p><strong class="text-blue-600">5.</strong> The final result is the Beta function $B(x,y)$, perfectly linking the two concepts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Applications Section -->
+    <section id="applications" class="section">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold tracking-tight text-center text-blue-600 sm:text-4xl">A Modern Atlas of Applications</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-center text-lg text-gray-600">For centuries, these functions have been indispensable tools, appearing with "unreasonable effectiveness" in seemingly unrelated fields.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Physics Card -->
+                <div class="card p-6 rounded-lg">
+                    <div class="flex items-center gap-4">
+                        <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path></svg>
+                        <h3 class="text-xl font-bold text-gray-900">Physics</h3>
+                    </div>
+                    <p class="mt-4 text-gray-600">Describing the fabric of reality, from the volume of n-dimensional spheres to the scattering amplitudes in String Theory (Veneziano amplitude).</p>
+                </div>
+                <!-- Statistics Card -->
+                <div class="card p-6 rounded-lg">
+                     <div class="flex items-center gap-4">
+                        <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <h3 class="text-xl font-bold text-gray-900">Statistics & AI</h3>
+                    </div>
+                    <p class="mt-4 text-gray-600">The backbone of modern data analysis. Gamma and Beta distributions model uncertainty, power Bayesian inference (A/B testing), and drive AI topic modeling (Latent Dirichlet Allocation).</p>
+                </div>
+                <!-- Finance Card -->
+                <div class="card p-6 rounded-lg">
+                    <div class="flex items-center gap-4">
+                        <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        <h3 class="text-xl font-bold text-gray-900">Finance</h3>
+                    </div>
+                    <p class="mt-4 text-gray-600">Essential for managing risk. Used in advanced option pricing (Fractional Black-Scholes models) and portfolio management to model asset returns more realistically.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Vision Section -->
+    <section id="vision" class="section">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold tracking-tight text-center text-blue-600 sm:text-4xl">A Research Vision for the 21st Century</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-center text-lg text-gray-600">By leveraging modern generalizations of these functions, we can solve pressing contemporary challenges. This research proposes a three-pronged program.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Vision 1 -->
+                <div class="card p-8 rounded-lg text-center">
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    </div>
+                    <h3 class="mt-6 text-xl font-bold text-gray-900">1. The Future of AI</h3>
+                    <p class="mt-2 text-gray-600">Forge intelligent systems with "probabilistic DNA." Use matrix-variate Gamma distributions as priors for neural network weights to build AI that can robustly quantify its own uncertainty.</p>
+                </div>
+                <!-- Vision 2 -->
+                <div class="card p-8 rounded-lg text-center">
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                       <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path></svg>
+                    </div>
+                    <h3 class="mt-6 text-xl font-bold text-gray-900">2. Taming Complexity</h3>
+                    <p class="mt-2 text-gray-600">Develop a new language for networks. Apply multimatrix variate distribution theory to model the joint behavior of complex systems, like financial markets coupled with macroeconomic indicators.</p>
+                </div>
+                <!-- Vision 3 -->
+                <div class="card p-8 rounded-lg text-center">
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-5.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-5.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222 4 2.222V20M12 12L8 9.778 4 12l4 2.222L12 12z"></path></svg>
+                    </div>
+                    <h3 class="mt-6 text-xl font-bold text-gray-900">3. Unsolved Mysteries</h3>
+                    <p class="mt-2 text-gray-600">Solidify the theoretical foundations. Pursue pure mathematical inquiry to solve open problems, such as finding a Bohr-Mollerup analogue for the time scales Gamma function.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section id="conclusion" class="section">
+        <div class="max-w-4xl mx-auto text-center px-4">
+            <h2 class="text-3xl font-bold tracking-tight text-blue-600 sm:text-4xl">The Enduring Power of a Beautiful Idea</h2>
+            <p class="mt-6 text-lg leading-8 text-gray-600">The story of the Beta and Gamma functions is a living, evolving narrative. The classical functions have given rise to powerful generalizations that equip us to face the grand challenges of our time. This research pivots from validating the past to inventing the future.</p>
+            <blockquote class="mt-10 text-xl font-semibold italic text-gray-900">
+                <p>"The most exciting chapters in the story of the Beta and Gamma functions are yet to be written."</p>
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- Citations Section -->
+    <section id="citations" class="section border-b-0">
+        <div class="max-w-4xl w-full mx-auto text-left px-4">
+            <h2 class="text-3xl font-bold tracking-tight text-blue-600 sm:text-4xl text-center">Citations</h2>
+            <ol class="mt-8 space-y-3 list-decimal list-inside text-gray-600 text-sm">
+                <li>Davis, P. J. (1959). Leonhard Euler's Integral: A Historical Profile of the Gamma Function. The American Mathematical Monthly, 66(10), 849-869.</li>
+                <li>Askey, R. A. (2000). The Gamma function. In Special Functions (pp. 1-25). Cambridge University Press.</li>
+                <li>James, A. T. (1964). Distributions of matrix variates and latent roots derived from normal samples. Annals of Mathematical Statistics, 35(2), 475-501.</li>
+                <li>Gupta, A. K., & Nagar, D. K. (2000). Matrix Variate Distributions. Chapman and Hall/CRC.</li>
+                <li>Dutka, J. (1991). The early history of the factorial function. Archive for History of Exact Sciences, 43(3), 225-249.</li>
+                <li>Green, M. B., Schwarz, J. H., & Witten, E. (1987). Superstring Theory, Vol. 1: Introduction. Cambridge University Press.</li>
+                <li>Blei, D. M., Ng, A. Y., & Jordan, M. I. (2003). Latent Dirichlet Allocation. Journal of Machine Learning Research, 3, 993-1022.</li>
+                <li>Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013). Bayesian Data Analysis. CRC press.</li>
+                <li>Lawless, J. F. (2011). Statistical models and methods for lifetime data. John Wiley & Sons.</li>
+                <li>Kac, V., & Cheung, P. (2002). Quantum Calculus. Springer Science & Business Media.</li>
+                <li>Gasper, G., & Rahman, M. (2004). Basic hypergeometric series (Vol. 96). Cambridge university press.</li>
+                <li>Krasniqi, V. (2015). A new inequality for the q-gamma function. Journal of Inequalities and Applications, 2015(1), 1-7.</li>
+                <li>Salem, A. (2012). On a q-gamma and a q-beta functions. Proceedings of the American Mathematical Society, 140(3), 965-975.</li>
+                <li>Consonni, G., & Veronese, P. (2008). Bayesian analysis of the matrix normal graphical model. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 70(3), 435-456.</li>
+                <li>Mathai, A. M. (2024). Matrix H-theory for a multivariate system with a hierarchical structure. Axioms, 13(1), 22.</li>
+                <li>Adamchik, V. S. (2001). The multiple gamma function and its applications. In Proceedings of the 2001 International Symposium on Symbolic and Algebraic Computation (pp. 1-8).</li>
+            </ol>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Render LaTeX formulas
+            try {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ]
+                });
+            } catch (error) {
+                console.error("KaTeX rendering failed:", error);
+            }
+
+            // Intersection Observer for scroll animations
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.15
+            });
+            sections.forEach(section => observer.observe(section));
+
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const hamburgerIcon = document.getElementById('hamburger-icon');
+            const closeIcon = document.getElementById('close-icon');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                hamburgerIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
+            });
+
+            // Dots background effect
+            const container = document.getElementById('dots-container');
+            if (container) {
+                const numDots = 150;
+                for (let i = 0; i < numDots; i++) {
+                    const dot = document.createElement('div');
+                    dot.style.position = 'absolute';
+                    dot.style.backgroundColor = 'rgba(156, 163, 175, 0.4)';
+                    const size = Math.random() * 2.5 + 1;
+                    dot.style.width = `${size}px`;
+                    dot.style.height = `${size}px`;
+                    dot.style.borderRadius = '50%';
+                    dot.style.left = `${Math.random() * 100}%`;
+                    dot.style.top = `${Math.random() * 100}%`;
+                    const animationDuration = Math.random() * 10 + 8;
+                    const xFloat = Math.random() * 40 - 20;
+                    const yFloat = Math.random() * 40 - 20;
+                    dot.animate([
+                        { transform: 'translate(0, 0)' },
+                        { transform: `translate(${xFloat}px, ${yFloat}px)` }
+                    ], {
+                        duration: animationDuration * 1000,
+                        direction: 'alternate',
+                        iterations: Infinity,
+                        easing: 'ease-in-out'
+                    });
+                    container.appendChild(dot);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
